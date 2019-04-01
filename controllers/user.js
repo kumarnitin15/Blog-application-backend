@@ -25,15 +25,15 @@ module.exports = {
         });
     },
 
-    GetUser(req, res) {
-        User.findOne({_id: req.params.userId}, (err, user) => {
-            if(err) {
-                console.log(err);
-                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
-            } else {
-                return res.status(HttpStatus.OK).json({message: 'Found user successfully', user});
-            }
-        });
+    async GetUser(req, res) {
+        try {
+            const user = await User.findOne({_id: req.params.userId}).populate('followers').populate('following');
+            return res.status(HttpStatus.OK).json({message: 'Found user successfully', user});
+        }
+        catch(err) {
+            console.log(err);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+        }
     },
 
     async FollowUser(req, res) {
