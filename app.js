@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const config = require('./config');
 const authRoutes = require('./routes/auth');
 const blogRoutes = require('./routes/blog');
+const userRoutes = require('./routes/user');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -26,6 +27,7 @@ app.use(cookieParser());
 
 mongoose.connect(config.dburl, { useNewUrlParser : true });
 
+app.use('/api/blogapp', userRoutes);
 app.use('/api/blogapp', authRoutes);
 app.use('/api/blogapp', blogRoutes);
 
