@@ -6,6 +6,7 @@ const userSchema = mongoose.Schema({
     firstName: { type: String },
     lastName: { type: String },
     aboutMe: { type: String },
+    blogs: [ { type: mongoose.Schema.Types.ObjectId, ref: "Blog" } ],
     password: { type: String },
     createdAt: { type: Date, default: Date.now() }
 });
