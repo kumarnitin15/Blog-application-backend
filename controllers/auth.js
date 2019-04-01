@@ -46,7 +46,8 @@ module.exports = {
                 const tokenData = {
                     _id: user._id,
                     username: user.username,
-                    password: user.password
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName
                 };
                 const token = jwt.sign({data: tokenData}, config.secret, {
                     expiresIn: "1h"
@@ -72,7 +73,8 @@ module.exports = {
                 const tokenData = {
                     _id: user._id,
                     username: user.username,
-                    password: user.password
+                    firstName: user.firstName,
+                    lastName: user.lastName
                 };
                 const token = jwt.sign({data: tokenData}, config.secret, {
                     expiresIn: '1h'
