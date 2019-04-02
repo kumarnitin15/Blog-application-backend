@@ -42,6 +42,16 @@ module.exports = {
             const user2 = await User.findOne({_id: req.body.userId});
             user1.following.push(req.body.userId);
             user2.followers.push(req.user._id);
+            const notification = {
+                sender: user1._id,
+                senderName: { firstName: user1.firstName, lastName: user1.lastName },
+                notificationType: 'Followers',
+                content: 'is now following you.',
+                isImg: true,
+                imgSrc: user1.profilePic,
+                createdAt: new Date()
+            };
+            user2.notifications.unshift(notification);
             user1.save(); user2.save();
             return res.status(HttpStatus.OK).json({message: 'Followed user successfully', user1, user2});
         }
@@ -61,6 +71,16 @@ module.exports = {
             index = user2.followers.indexOf(user1._id);
             if(index > -1)
                 user2.followers.splice(index, 1);
+            const notification = {
+                sender: user1._id,
+                senderName: { firstName: user1.firstName, lastName: user1.lastName },
+                notificationType: 'Followers',
+                content: 'has unfollowed you.',
+                isImg: true,
+                imgSrc: user1.profilePic,
+                createdAt: new Date()
+            };
+            user2.notifications.unshift(notification);
             user1.save();
             user2.save();
             return res.status(HttpStatus.OK).json({message: 'Unfollowed user successfully', user1, user2}); 
