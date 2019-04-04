@@ -7,6 +7,7 @@ const config = require('./config');
 const authRoutes = require('./routes/auth');
 const blogRoutes = require('./routes/blog');
 const userRoutes = require('./routes/user');
+const imageRoutes = require('./routes/image');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -30,6 +31,7 @@ mongoose.connect(config.dburl, { useNewUrlParser : true });
 app.use('/api/blogapp', userRoutes);
 app.use('/api/blogapp', authRoutes);
 app.use('/api/blogapp', blogRoutes);
+app.use('/api/blogapp', imageRoutes);
 
 app.listen(PORT, () => {
     console.log("The server is running on port " + PORT);
