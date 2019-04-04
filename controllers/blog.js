@@ -6,7 +6,12 @@ module.exports = {
     async GetAllBlogs(req, res) {
         try {
             const blogs = await Blog.find({}).sort({createdAt: -1});
-            return res.status(HttpStatus.OK).json({message: 'Found all blogs', blogs});
+            let profilePics = [];
+            for(let i=0; i<blogs.length; i++) {
+                const user = await User.findOne({_id: blogs[i].user});
+                profilePics.push(user.profilePic);
+            }
+            return res.status(HttpStatus.OK).json({message: 'Found all blogs', blogs, profilePics});
         }
         catch(err) {
             console.log(err);
