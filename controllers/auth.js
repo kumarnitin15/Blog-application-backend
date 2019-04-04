@@ -85,5 +85,32 @@ module.exports = {
             console.log(err);
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
         });
+    },
+
+    async ChangePassword(req, res) {
+        try {
+            const user = await User.findOne({_id: req.user._id});
+            bcrypt.compare(req.body.currentPassword, user.password).then(result => {
+                if(!result)
+                    return res.status(HttpStatus.BAD_REQUEST).json({message: 'Password is incorrect'});
+                if(req.body.newPassword !== req.body.confirmPassword)
+                    return res.status(HttpStatus.BAD_REQUEST).json({message: "The new password and confirm password don't match"});
+                if(req.body.newPassword.length < 5)
+                    return res.status(HttpStatus.BAD_REQUEST).json({message: "Password must be atleast 5 characters"});
+                if(req.body.newPassword.length > 20)
+                    return res.status(HttpStatus.BAD_REQUEST).json({message: "Password cannot be more than 20 characters"});
+                bcrypt.hash(req.body.newPassword, 10, (err, hash) => {
+                    if(err)
+                        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error hashing password'});
+                    user.password = hash;
+                    user.save();
+                    return res.status(HttpStatus.OK).json({message: 'Changed password successfully', user});
+                });
+            });
+        }
+        catch(err) {
+            console.log(err);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+        }
     }
 };
