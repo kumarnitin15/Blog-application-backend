@@ -6,7 +6,7 @@ module.exports = {
     async GetUserBlogs(req, res) {
         try {
             const user = await User.findOne({_id: req.params.userId}).populate('blogs');
-            return res.status(HttpStatus.OK).json({message: 'Found the blogs of the specific user', blogs: user.blogs});
+            return res.status(HttpStatus.OK).json({message: 'Found the blogs of the specific user', blogs: user.blogs, profilePic: user.profilePic});
         }
         catch(err) {
             console.log(err);
@@ -32,6 +32,21 @@ module.exports = {
         }
         catch(err) {
             console.log(err);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+        }
+    },
+
+    async GetNotifs(req, res) {
+        try {
+            const user = await User.findOne({_id: req.user._id});
+            let profilePics = [];
+            for(let i=0; i<user.notifications.length; i++) {
+                let notifUser = await User.findOne({_id: user.notifications[i].sender});
+                profilePics.push(notifUser.profilePic);
+            }
+            return res.status(HttpStatus.OK).json({message: 'Found user successfully', notifications: user.notifications, profilePics: profilePics});
+        }
+        catch(err) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
         }
     },
@@ -87,6 +102,16 @@ module.exports = {
         }
         catch(err) {
             console.log(err);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+        }
+    },
+
+    async GetProfilePic(req, res) {
+        try {
+            const user = await User.findOne({_id: req.params.userId});
+            return res.status(HttpStatus.OK).json({message: 'Found profile picture successfully', imgSrc: user.profilePic});
+        }
+        catch(err) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
         }
     }
