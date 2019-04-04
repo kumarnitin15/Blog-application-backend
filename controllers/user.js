@@ -114,5 +114,60 @@ module.exports = {
         catch(err) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
         }
+    },
+
+    async MarkAllNotifs(req, res) {
+        try {
+            const user = await User.findOne({_id: req.user._id});
+            for(let i = 0; i < user.notifications.length; i++) {
+                user.notifications[i].read = true;
+            }
+            user.save();
+            return res.status(HttpStatus.OK).json({message: 'Marked all notifications successfully'});
+        }
+        catch(err) {
+            console.log(err);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+        }
+    },
+
+    async MarkNotif(req, res) {
+        try {
+            const user = await User.findOne({_id: req.user._id});
+            user.notifications[req.body.index].read = true;
+            user.save();
+            return res.status(HttpStatus.OK).json({message: 'Marked notification successfully'});
+        }
+        catch(err) {
+            console.log(err);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+        }
+    },
+
+    async DeleteNotif(req, res) {
+        try {
+            const user = await User.findOne({_id: req.user._id});
+            user.notifications.splice(req.body.index, 1);
+            user.save();
+            return res.status(HttpStatus.OK).json({message: 'Deleted notification successfully'});
+        }
+        catch(err) {
+            console.log(err);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+        }
+    },
+
+    async DeleteAllNotifs(req, res) {
+        try {
+            const user = await User.findOne({_id: req.user._id});
+            if(user.notifications.length > 0)
+                user.notifications.splice(0, user.notifications.length);
+            user.save();
+            return res.status(HttpStatus.OK).json({message: 'Deleted all notifications successfully'});
+        }
+        catch(err) {
+            console.log(err);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+        }
     }
 }

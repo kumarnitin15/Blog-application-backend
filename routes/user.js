@@ -11,5 +11,9 @@ router.post('/follow-user', AuthHelper.VerifyToken, UserCntrl.FollowUser);
 router.post('/unfollow-user', AuthHelper.VerifyToken, UserCntrl.UnfollowUser);
 router.get('/profile-pic/:userId', AuthHelper.VerifyToken, UserCntrl.GetProfilePic);
 router.get('/notifs', AuthHelper.VerifyToken, UserCntrl.GetNotifs);
+router.post('/markAllNotifs', AuthHelper.VerifyToken, UserCntrl.MarkAllNotifs);
+router.post('/markNotif', AuthHelper.VerifyToken, UserCntrl.MarkNotif);
+router.post('/deleteNotif', AuthHelper.VerifyToken, UserCntrl.DeleteNotif);
+router.post('/deleteAllNotifs', AuthHelper.VerifyToken, UserCntrl.DeleteAllNotifs);
 
 module.exports = router;
