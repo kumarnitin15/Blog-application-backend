@@ -15,5 +15,6 @@ router.post('/markAllNotifs', AuthHelper.VerifyToken, UserCntrl.MarkAllNotifs);
 router.post('/markNotif', AuthHelper.VerifyToken, UserCntrl.MarkNotif);
 router.post('/deleteNotif', AuthHelper.VerifyToken, UserCntrl.DeleteNotif);
 router.post('/deleteAllNotifs', AuthHelper.VerifyToken, UserCntrl.DeleteAllNotifs);
+router.post('/update-profile-pic', AuthHelper.VerifyToken, UserCntrl.UpdateProfilePic);
 
 module.exports = router;

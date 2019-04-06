@@ -169,5 +169,17 @@ module.exports = {
             console.log(err);
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
         }
+    },
+
+    async UpdateProfilePic(req, res) {
+        try {
+            const user = await User.findOne({_id: req.user._id});
+            user.profilePic = req.body.imgSrc;
+            user.save();
+            return res.status(HttpStatus.OK).json({message: 'Profile  picture updated successfully'});
+        }
+        catch(err) {
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+        }
     }
 }
