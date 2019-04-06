@@ -39,6 +39,7 @@ module.exports = {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 aboutMe: req.body.aboutMe,
+                images: ['http://profilepicturesdp.com/wp-content/uploads/2018/06/default-dp-6.png'],
                 password: hash
             };
 
