@@ -2,11 +2,12 @@ const cloudinary = require('cloudinary');
 const Httpstatus = require('http-status-codes');
 
 const User = require('../models/user');
+const config = require('../config');
 
 cloudinary.config({
-    cloud_name: 'dyanou5zn',
-    api_key: '847914655324535',
-    api_secret: 'ehTIlScd5gtf1tcd39-Ux9FVtos'
+    cloud_name: config.cloud_name,
+    api_key: config.api_key,
+    api_secret: config.api_secret
 });
 
 module.exports = {
@@ -16,7 +17,8 @@ module.exports = {
                 return res.status(Httpstatus.BAD_REQUEST).json({message: 'Please upload an image!'});
             try {
                 const user = await User.findOne({_id: req.user._id});
-                user.profilePic = result.secure_url;
+                //user.profilePic = result.secure_url;
+                user.images.unshift(result.secure_url);
                 user.save();
                 return res.status(Httpstatus.OK).json({message: 'Image uploaded successfully', user});
             }

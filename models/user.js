@@ -27,7 +27,8 @@ const userSchema = mongoose.Schema({
             imgSrc: { type: String, default: '' },
             createdAt: { type: Date, default: Date.now() }
         }
-    ]
+    ],
+    images: []
 });
 
 module.exports = mongoose.model("User", userSchema);
