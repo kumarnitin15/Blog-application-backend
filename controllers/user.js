@@ -27,7 +27,7 @@ module.exports = {
 
     async GetUser(req, res) {
         try {
-            const user = await User.findOne({_id: req.params.userId}).populate('followers').populate('following');
+            const user = await User.findOne({_id: req.params.userId}).populate('blogs').populate('followers').populate('following');
             return res.status(HttpStatus.OK).json({message: 'Found user successfully', user});
         }
         catch(err) {
