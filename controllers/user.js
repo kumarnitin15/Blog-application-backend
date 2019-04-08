@@ -44,7 +44,8 @@ module.exports = {
                 let notifUser = await User.findOne({_id: user.notifications[i].sender});
                 profilePics.push(notifUser.profilePic);
             }
-            return res.status(HttpStatus.OK).json({message: 'Found user successfully', notifications: user.notifications, profilePics: profilePics});
+            //return res.status(HttpStatus.OK).json({message: 'Found user successfully', notifications: user.notifications, profilePics: profilePics});
+            return res.status(HttpStatus.OK).json({message: 'Found user successfully', user, profilePics: profilePics});
         }
         catch(err) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});

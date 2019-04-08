@@ -12,6 +12,11 @@ const imageRoutes = require('./routes/image');
 const PORT = process.env.PORT || 3000;
 const app = express();
 
+const server = require('http').createServer(app);
+const io = require('socket.io').listen(server);
+
+require('./socket')(io);
+
 app.use(cors());
 
 app.use((req, res, next)  => {
@@ -33,6 +38,6 @@ app.use('/api/blogapp', authRoutes);
 app.use('/api/blogapp', blogRoutes);
 app.use('/api/blogapp', imageRoutes);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log("The server is running on port " + PORT);
 });
