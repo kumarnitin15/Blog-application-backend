@@ -10,6 +10,7 @@ const blogSchema = mongoose.Schema({
     userFirstName: { type: String },
     userLastName: { type: String },
     views: [ {type: mongoose.Schema.Types.ObjectId, ref: "User"} ],
+    likes: [ { type: mongoose.Schema.Types.ObjectId, ref: "User" } ],
     online: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now() }
 });

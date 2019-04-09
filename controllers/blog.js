@@ -155,5 +155,18 @@ module.exports = {
                 return res.status(HttpStatus.OK).json({message: 'Deleted blog successfully'});
             });
         });
+    },
+
+    async AddLike(req, res) {
+        try {
+            const blog = await Blog.findOne({_id: req.body.blogId});
+            let userId = req.user._id;
+            blog.likes.push(userId);
+            blog.save();
+            return res.status(HttpStatus.OK).json({message: 'Added like successfully'});
+        }
+        catch(err) {
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+        }
     }
 }
