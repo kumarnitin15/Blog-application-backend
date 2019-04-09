@@ -12,5 +12,6 @@ router.post('/add-view', AuthHelper.VerifyToken, BlogCntrl.AddView);
 router.post('/post-blog', AuthHelper.VerifyToken, BlogCntrl.PostBlog);
 router.post('/delete-blog', AuthHelper.VerifyToken, BlogCntrl.DeleteBlog);
 router.post('/add-like', AuthHelper.VerifyToken, BlogCntrl.AddLike);
+router.post('/add-comment', AuthHelper.VerifyToken, BlogCntrl.AddComment);
 
 module.exports = router;

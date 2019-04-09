@@ -160,10 +160,77 @@ module.exports = {
     async AddLike(req, res) {
         try {
             const blog = await Blog.findOne({_id: req.body.blogId});
-            let userId = req.user._id;
-            blog.likes.push(userId);
+            const user = await User.findOne({_id: req.user._id});
+            blog.likes.push(user._id);
+            const notification = {
+                sender: req.user._id,
+                senderName: { firstName: user.firstName, lastName: user.lastName },
+                notificationType: 'Like',
+                content: 'liked',
+                blog: blog._id,
+                blogTopic: blog.topic,
+                isIcon: true,
+                iconClass: 'heart red icon',
+                createdAt: new Date()
+            };
+            let followers = [];
+            for(let i=0; i<user.followers.length; i++) {
+                const follower = await User.findOne({_id: user.followers[i]});
+                followers.push(follower);
+            }
+
+            for(let i=0; i<followers.length; i++) {
+                followers[i].notifications.unshift(notification);
+                followers[i].save();
+            }
             blog.save();
             return res.status(HttpStatus.OK).json({message: 'Added like successfully'});
+        }
+        catch(err) {
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+        }
+    },
+
+    async AddComment(req, res) {
+        try {
+            const blog = await Blog.findOne({_id: req.body.blogId});
+            const user = await User.findOne({_id: req.user._id});
+            const comment = {
+                user: {
+                    id: user._id,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    profilePic: user.profilePic
+                },
+                comment: req.body.comment,
+                createdAt: new Date()
+            };
+
+            const notification = {
+                sender: req.user._id,
+                senderName: { firstName: user.firstName, lastName: user.lastName },
+                notificationType: 'Comment',
+                content: 'commented on',
+                blog: blog._id,
+                blogTopic: blog.topic,
+                isIcon: true,
+                iconClass: 'comment black icon',
+                createdAt: new Date()
+            };
+            let followers = [];
+            for(let i=0; i<user.followers.length; i++) {
+                const follower = await User.findOne({_id: user.followers[i]});
+                followers.push(follower);
+            }
+
+            for(let i=0; i<followers.length; i++) {
+                followers[i].notifications.unshift(notification);
+                followers[i].save();
+            }
+
+            blog.comments.unshift(comment);
+            blog.save();
+            return res.status(HttpStatus.OK).json({message: 'Added comment successfully'});
         }
         catch(err) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});

@@ -11,6 +11,16 @@ const blogSchema = mongoose.Schema({
     userLastName: { type: String },
     views: [ {type: mongoose.Schema.Types.ObjectId, ref: "User"} ],
     likes: [ { type: mongoose.Schema.Types.ObjectId, ref: "User" } ],
+    comments: [ {
+        user: {
+            id: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
+            firstName: { type: String, default: '' },
+            lastName: { type: String, default: '' },
+            profilePic: { type: String, default: '' }
+        },
+        comment: { type: String, default: '' },
+        createdAt: { type: Date, default: Date.now() }
+    } ],
     online: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now() }
 });
