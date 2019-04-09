@@ -21,6 +21,7 @@ const blogSchema = mongoose.Schema({
         comment: { type: String, default: '' },
         createdAt: { type: Date, default: Date.now() }
     } ],
+    shares: [ { type: mongoose.Schema.Types.ObjectId, ref: "User" } ],
     online: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now() }
 });
