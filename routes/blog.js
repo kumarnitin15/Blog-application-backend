@@ -10,5 +10,6 @@ router.get('/blog/:blogId', AuthHelper.VerifyToken, BlogCntrl.GetBlogById);
 router.post('/save-blog', AuthHelper.VerifyToken, BlogCntrl.SaveBlog);
 router.post('/add-view', AuthHelper.VerifyToken, BlogCntrl.AddView);
 router.post('/post-blog', AuthHelper.VerifyToken, BlogCntrl.PostBlog);
+router.post('/delete-blog', AuthHelper.VerifyToken, BlogCntrl.DeleteBlog);
 
 module.exports = router;

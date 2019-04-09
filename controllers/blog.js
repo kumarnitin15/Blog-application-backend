@@ -135,5 +135,25 @@ module.exports = {
         catch(err) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
         }
+    },
+
+    DeleteBlog(req, res) {
+        Blog.deleteOne({_id: req.body.blogId}, (err) => {
+            if(err) {
+                console.log(err);
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+            }
+            User.findOne({_id: req.user._id}, (err, user) => {
+                if(err) {
+                    console.log(err);
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+                }
+                const index = user.blogs.indexOf(req.body.blogId);
+                if(index > -1)
+                    user.blogs.splice(index, 1);
+                user.save();
+                return res.status(HttpStatus.OK).json({message: 'Deleted blog successfully'});
+            });
+        });
     }
 }
