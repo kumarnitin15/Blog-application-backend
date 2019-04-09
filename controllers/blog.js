@@ -78,5 +78,39 @@ module.exports = {
             console.log(err);
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
         }
+    },
+
+    async PostBlog(req, res) {
+        try {
+            const blog = await Blog.findOne({_id: req.body.blogId});
+            const user = await User.findOne({_id: req.user._id});
+            blog.online = true;
+            const notification = {
+                sender: req.user._id,
+                senderName: { firstName: user.firstName, lastName: user.lastName },
+                notificationType: 'New Blog',
+                content: 'posted a new blog:',
+                blog: blog._id,
+                blogTopic: blog.topic,
+                isIcon: true,
+                iconClass: 'pencil black icon',
+                createdAt: new Date()
+            };
+            let followers = [];
+            for(let i=0; i<user.followers.length; i++) {
+                const follower = await User.findOne({_id: user.followers[i]});
+                followers.push(follower);
+            }
+
+            for(let i=0; i<followers.length; i++) {
+                followers[i].notifications.unshift(notification);
+                followers[i].save();
+            }
+            blog.save();
+            return res.status(HttpStatus.OK).json({message: 'Posted blog successfully'});
+        }
+        catch(err) {
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+        }
     }
 }
