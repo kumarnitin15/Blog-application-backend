@@ -59,8 +59,31 @@ module.exports = {
             blog.caption = req.body.caption;
             blog.content = req.body.content;
             blog.mainImage = req.body.mainImage;
+            const user = await User.findOne({_id: blog.user});
+            if(blog.online) {
+                const notification = {
+                    sender: req.user._id,
+                    senderName: { firstName: user.firstName, lastName: user.lastName },
+                    notificationType: 'Edit',
+                    content: 'edited',
+                    blog: blog._id,
+                    blogTopic: blog.topic,
+                    isIcon: true,
+                    iconClass: 'edit blue icon',
+                    createdAt: new Date()
+                };
+                let followers = [];
+                for(let i=0; i<user.followers.length; i++) {
+                    const follower = await User.findOne({_id: user.followers[i]});
+                    followers.push(follower);
+                }
+                for(let i=0; i<followers.length; i++) {
+                    followers[i].notifications.unshift(notification);
+                    followers[i].save();
+                }
+            }
             blog.save();
-            return res.status(HttpStatus.OK).json({message: 'Saved blog successfully', blog});
+            return res.status(HttpStatus.OK).json({message: 'Saved blog successfully'});
         }
         catch(err) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
