@@ -194,5 +194,17 @@ module.exports = {
         catch(err) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
         }
+    },
+
+    async RemoveBookmark(req, res) {
+        try {
+            const user = await User.findOne({_id: req.user._id});
+            user.bookmarks.splice(req.body.index, 1);
+            user.save();
+            return res.status(HttpStatus.OK).json({message: 'Removed bookmark successfully'});
+        }
+        catch(err) {
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+        }
     }
 }
