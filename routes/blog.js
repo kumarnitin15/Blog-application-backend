@@ -14,5 +14,6 @@ router.post('/delete-blog', AuthHelper.VerifyToken, BlogCntrl.DeleteBlog);
 router.post('/add-like', AuthHelper.VerifyToken, BlogCntrl.AddLike);
 router.post('/add-comment', AuthHelper.VerifyToken, BlogCntrl.AddComment);
 router.post('/share-blog', AuthHelper.VerifyToken, BlogCntrl.ShareBlog);
+router.get('/bookmarked-blogs', AuthHelper.VerifyToken, BlogCntrl.GetBookmarkedBlogs);
 
 module.exports = router;

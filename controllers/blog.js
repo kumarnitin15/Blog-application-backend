@@ -271,5 +271,23 @@ module.exports = {
         catch(err) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
         }
+    },
+
+    async GetBookmarkedBlogs(req, res) {
+        try {
+            const user = await User.findOne({_id: req.user._id});
+            let blogs = [];
+            let profilePics = [];
+            for(let i=0; i<user.bookmarks.length; i++) {
+                const blog = await Blog.findOne({_id: user.bookmarks[i]});
+                const author = await User.findOne({_id: blog.user});
+                blogs.push(blog);
+                profilePics.push(author.profilePic);
+            }
+            return res.status(HttpStatus.OK).json({message: 'Found bookarked blogs successfully', blogs, profilePics});
+        }
+        catch(err) {
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+        }
     }
 }
