@@ -182,5 +182,17 @@ module.exports = {
         catch(err) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
         }
+    },
+
+    async AddBookmark(req, res) {
+        try {
+            const user = await User.findOne({_id: req.user._id});
+            user.bookmarks.unshift(req.body.blogId);
+            user.save();
+            return res.status(HttpStatus.OK).json({message: 'Bookmarked blog successfully'});
+        }
+        catch(err) {
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+        }
     }
 }

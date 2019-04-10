@@ -28,7 +28,8 @@ const userSchema = mongoose.Schema({
             createdAt: { type: Date, default: Date.now() }
         }
     ],
-    images: []
+    images: [],
+    bookmarks: [ { type: mongoose.Schema.Types.ObjectId, ref: "Blog" } ]
 });
 
 module.exports = mongoose.model("User", userSchema);
