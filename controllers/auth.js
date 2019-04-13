@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const config = require('../config');
 const User = require('../models/user');
+const helper = require('../helpers/helper');
 
 module.exports = {
     async CreateUser(req, res){
@@ -25,7 +26,7 @@ module.exports = {
         if(userName)
             return res.status(HttpStatus.CONFLICT).json({message: 'Username already exist'});
 
-        const userEmail = await User.findOne({email: req.body.email.toLowerCase()});
+        const userEmail = await User.findOne({email: helper.lowerCase(req.body.email)});
         if(userEmail)
             return res.status(HttpStatus.CONFLICT).json({message: 'Email already exist'});
 
@@ -36,19 +37,20 @@ module.exports = {
             const body = {
                 username: req.body.username,
                 email: req.body.email.toLowerCase(),
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
+                firstName: helper.firstUpper(req.body.firstName),
+                lastName: helper.firstUpper(req.body.lastName),
                 aboutMe: req.body.aboutMe,
                 images: ['http://profilepicturesdp.com/wp-content/uploads/2018/06/default-dp-6.png'],
-                password: hash
+                password: hash,
+                createAt: new Date()
             };
 
             User.create(body).then(user => {
                 const tokenData = {
                     _id: user._id,
                     username: user.username,
-                    firstName: req.body.firstName,
-                    lastName: req.body.lastName
+                    firstName: helper.firstUpper(req.body.firstName),
+                    lastName: helper.firstUpper(req.body.lastName)
                 };
                 const token = jwt.sign({data: tokenData}, config.secret, {
                     expiresIn: "1h"
@@ -74,8 +76,8 @@ module.exports = {
                 const tokenData = {
                     _id: user._id,
                     username: user.username,
-                    firstName: user.firstName,
-                    lastName: user.lastName
+                    firstName: helper.firstUpper(user.firstName),
+                    lastName: helper.firstUpper(user.lastName)
                 };
                 const token = jwt.sign({data: tokenData}, config.secret, {
                     expiresIn: '1h'

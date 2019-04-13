@@ -278,12 +278,31 @@ module.exports = {
             const user = await User.findOne({_id: req.user._id});
             let blogs = [];
             let profilePics = [];
+            let indices = [];
+            // for(let i=0; i<user.bookmarks.length; i++) {
+            //     const blog = await Blog.findOne({_id: user.bookmarks[i]});
+            //     const author = await User.findOne({_id: blog.user});
+            //     blogs.push(blog);
+            //     profilePics.push(author.profilePic);
+            // }
             for(let i=0; i<user.bookmarks.length; i++) {
-                const blog = await Blog.findOne({_id: user.bookmarks[i]});
-                const author = await User.findOne({_id: blog.user});
-                blogs.push(blog);
-                profilePics.push(author.profilePic);
+                const count = await Blog.countDocuments({_id: user.bookmarks[i]});
+                if(count > 0) {
+                    const blog = await Blog.findOne({_id: user.bookmarks[i]});
+                    const author = await User.findOne({_id: blog.user});
+                    blogs.push(blog);
+                    profilePics.push(author.profilePic);
+                }
+                else {
+                    indices.push(i);
+                    //user.bookmarks.splice(i, 1);
+                }
             }
+            for(let i=indices.length-1; i>=0; i--) {
+                user.bookmarks.splice(i,1);
+            }
+            if(indices.length > 0)
+                user.save();
             return res.status(HttpStatus.OK).json({message: 'Found bookarked blogs successfully', blogs, profilePics});
         }
         catch(err) {
